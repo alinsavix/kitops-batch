@@ -28,7 +28,7 @@ bl_info = {
     "author" : "Chipp Walters, Ahmed Ali",
     "description" : "",
     "blender" : (2, 83, 0),
-    "version" : (1, 0, 2),
+    "version" : (1, 0, 5),
     "location" : "View 3D > KIT OPS BATCH",
     "warning" : "",
     "category" : "3D View",

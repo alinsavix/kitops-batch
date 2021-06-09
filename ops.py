@@ -349,6 +349,11 @@ class OBJECT_OT_batch_convert_images(bpy.types.Operator):
         utils.create_log_file(images_folder)
 
         for ob in decal_objects:
+            # deactivating some cycles visibility options
+            ob.cycles_visibility.glossy = False
+            ob.cycles_visibility.shadow = False
+            ob.cycles_visibility.diffuse = False
+            
             blend = utils.create_blend(images_folder, ob, new_scene, self)
             utils.write_log_entry(images_folder, blend)
 

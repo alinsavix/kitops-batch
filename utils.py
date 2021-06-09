@@ -232,19 +232,36 @@ def import_obj(path):
     obj_folder = bpy.path.abspath(props.obj_folder)
     file_path = os.path.join(obj_folder, path)
 
-    bpy.ops.import_scene.obj(
-        filepath= file_path,
-        use_edges= props.use_edges,
-        use_smooth_groups= props.use_smooth_groups,
-        use_split_objects= props.use_split_objects,
-        use_split_groups= props.use_split_groups,
-        use_groups_as_vgroups= props.use_groups_as_vgroups,
-        use_image_search= props.use_image_search,
-        split_mode= props.split_mode,
-        global_clight_size= props.global_clight_size,
-        axis_forward= props.axis_forward,
-        axis_up= props.axis_up
-    )
+    version = bpy.app.version
+    if version < (2, 92, 0):
+        bpy.ops.import_scene.obj(
+            filepath= file_path,
+            use_edges= props.use_edges,
+            use_smooth_groups= props.use_smooth_groups,
+            use_split_objects= props.use_split_objects,
+            use_split_groups= props.use_split_groups,
+            use_groups_as_vgroups= props.use_groups_as_vgroups,
+            use_image_search= props.use_image_search,
+            split_mode= props.split_mode,
+            global_clight_size= props.global_clight_size,
+            axis_forward= props.axis_forward,
+            axis_up= props.axis_up
+        )
+    else:
+        bpy.ops.import_scene.obj(
+            filepath= file_path,
+            use_edges= props.use_edges,
+            use_smooth_groups= props.use_smooth_groups,
+            use_split_objects= props.use_split_objects,
+            use_split_groups= props.use_split_groups,
+            use_groups_as_vgroups= props.use_groups_as_vgroups,
+            use_image_search= props.use_image_search,
+            split_mode= props.split_mode,
+            global_clamp_size = props.global_clight_size,
+            axis_forward= props.axis_forward,
+            axis_up= props.axis_up
+        )
+
 
     # not the best way to get a list of the imported objects but I can't think of another way
     imported_objs = bpy.context.selected_objects
@@ -429,7 +446,7 @@ def create_blend(dir_path, ob, scene, operator, create_insert= True, children= [
 
     if create_insert:
         # use save_insert() from KITOPS modules
-        if 'kitops.addon.utility.smart' in sys.modules:
+        if 'kitops.addon.utility.matrixmath' in sys.modules:
             # assign object as main object
             ob.select_set(True)
             bpy.context.view_layer.objects.active = ob
@@ -439,7 +456,7 @@ def create_blend(dir_path, ob, scene, operator, create_insert= True, children= [
             all_objects = [ob] + children
 
             # save to external blend file with INSERT properties
-            sys.modules['kitops.addon.utility.smart'].save_insert(path= filepath, objects= all_objects)
+            sys.modules['kitops.addon.utility.matrixmath'].save_insert(path= filepath, objects= all_objects)
             ob.select_set(False)
         else:
             operator.report(type= {'ERROR'}, message= "Please make sure KITOPS is installed and activated")
@@ -637,6 +654,7 @@ def create_decal(image_name, image_size, decal_mat_name):
     plane.dimensions = size_x, size_y, 0.0
     plane.data.name = plane.name = name
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
 
     # create a new material
     decal_template_mat = bpy.data.materials.get(decal_mat_name)
